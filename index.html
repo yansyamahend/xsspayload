@@ -2,14 +2,17 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Root-Me Visit Test</title>
+    <title>JavaScript Test</title>
 </head>
 <body>
-    <h1>Page loaded</h1>
 
-    <img
-      src="https://webhook.site/e1570119-9fac-44ef-9e18-89981f7f7c07?stage=page-loaded"
-      alt=""
-    >
+<h1>JS Execution Test</h1>
+
+<script>
+const hook = "https://webhook.site/e1570119-9fac-44ef-9e18-89981f7f7c07";
+
+new Image().src = hook + "?stage=js-executed&time=" + Date.now();
+</script>
+
 </body>
 </html>
